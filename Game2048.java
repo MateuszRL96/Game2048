@@ -77,8 +77,45 @@ public class Game2048 extends Game{
         }
     }
     
-    private void drawScene(){
-        for(int x = 0; x < SIDE; x++){
+    private boolean compressRow(int[] row)
+    {
+        int insertPosition = 0;
+        boolean result = false;
+        for(int x = 0; x < SIDE; x++)
+        {
+            if(row[x] > 0)
+            {
+                if(x != insertPosition)
+                {
+                    row[insertPosition] = row[x];
+                    row[x] = 0;
+                    result = true;
+                }
+            insertPosition++;
+            }
+        }
+        return result;
+    }
+    
+    private boolean mergeRow(int[] row)
+    {
+        boolean result = false;
+        for(int i = 0; i < row.length - 1; i++)
+        {
+            if(row[i] != 0 && row[i] == row[i + 1])
+            {
+                row[i] += row[i + 1];
+                row[i + 1] = 0;
+                result = true;
+            }
+        }
+        return result;
+    }
+    
+    private void drawScene()
+    {
+        for(int x = 0; x < SIDE; x++)
+        {
             for(int y = 0; y < SIDE; y++)
             {
                 setCellColoredNumber(x, y, gameField[y][x]);
