@@ -1,7 +1,6 @@
 package com.codegym.games.game2048;
 
-import com.codegym.engine.cell.Color;
-import com.codegym.engine.cell.Game;
+import com.codegym.engine.cell.*;
 
 public class Game2048 extends Game{
     private static final int SIDE = 4;
@@ -13,6 +12,31 @@ public class Game2048 extends Game{
         createGame();
         
         //->last
+        drawScene();
+    }
+    
+    @Override
+    public void onKeyPress(Key key){
+        if (key == Key.UP)
+        {
+            moveUp();
+        }
+        else if (key == Key.DOWN)
+        {
+            moveDown();
+        }
+        else if (key == Key.RIGHT)
+        {
+            moveRight();
+        }
+        else if (key == Key.LEFT)
+        {
+            moveLeft();
+        }
+        else 
+        {
+            return;
+        }
         drawScene();
     }
     
@@ -75,6 +99,33 @@ public class Game2048 extends Game{
             default: 
                 return Color.NONE;
         }
+    }
+    
+    private void moveUp(){
+        
+    }
+    private void moveLeft(){
+        boolean newNumber = false;
+        for(int[] row : gameField)
+        {
+            boolean compressed = compressRow(row);
+            boolean merged = mergeRow(row);
+            if (merged){
+                compressRow(row);
+            }
+            if(compressed || merged){
+                newNumber = true;
+            }
+        }
+        if(newNumber){
+            createNewNumber();
+        }
+    }
+    private void moveRight(){
+        
+    }
+    private void moveDown(){
+        
     }
     
     private boolean compressRow(int[] row)
