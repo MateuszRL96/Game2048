@@ -5,6 +5,7 @@ import com.codegym.engine.cell.*;
 public class Game2048 extends Game{
     private static final int SIDE = 4;
     private int[][] gameField = new int[SIDE][SIDE];
+    private boolean isGameStopped = false;
     
     @Override
     public void initialize(){
@@ -47,6 +48,13 @@ public class Game2048 extends Game{
     
     private void createNewNumber()
     {
+        if (getMaxTileValue() == 2048)
+        {
+            win();
+            return;
+        }
+        
+        
         boolean isCreated = false;
         do 
         {
@@ -59,6 +67,24 @@ public class Game2048 extends Game{
             }
         }
         while(!isCreated);
+    }
+    
+    private int getMaxTileValue()
+    {
+        int max = gameField[0][0];
+        for(int x = 0; x < SIDE; x++){
+            for(int y = 0; y < SIDE; y++){
+                if(gameField[x][y] > max){
+                    max = gameField[x][y];
+                }
+            }
+        }
+        return max;
+    }
+    
+    private void win() {
+        showMessageDialog(Color.NONE, "You Win!", Color.WHITE, 40);
+        isGameStopped = true;
     }
     
     private void setCellColoredNumber(int x, int y, int value)
@@ -102,6 +128,11 @@ public class Game2048 extends Game{
     }
     
     private void moveUp(){
+        rotateClockwise();
+        rotateClockwise();
+        rotateClockwise();
+        moveLeft();
+        rotateClockwise();
         
     }
     private void moveLeft(){
@@ -122,10 +153,18 @@ public class Game2048 extends Game{
         }
     }
     private void moveRight(){
-        
+        rotateClockwise();
+        rotateClockwise();
+        moveLeft();
+        rotateClockwise();
+        rotateClockwise();
     }
     private void moveDown(){
-        
+        rotateClockwise();
+        moveLeft();
+        rotateClockwise();
+        rotateClockwise();
+        rotateClockwise();
     }
     
     private boolean compressRow(int[] row)
@@ -161,6 +200,17 @@ public class Game2048 extends Game{
             }
         }
         return result;
+    }
+    
+    private void rotateClockwise()
+    {
+        int[][] result = new int[SIDE][SIDE];
+        for(int i = 0; i < SIDE; i++){
+            for(int j = 0; j < SIDE; j++){
+                result[j][SIDE - 1 - i] = gameField[i][j];
+            }
+        }
+        gameField = result;
     }
     
     private void drawScene()
